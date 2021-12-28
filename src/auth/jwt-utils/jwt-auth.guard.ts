@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AuthGuard, PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-jwt';
+import { AuthGuard } from '@nestjs/passport';
 import { JWT } from '../constants';
 
 @Injectable()

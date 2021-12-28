@@ -4,19 +4,19 @@ import { PassportModule } from '@nestjs/passport';
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { authProviders } from './auth.providers';
-import { JwtStrategy } from './jwt';
+import { JwtStrategy } from './jwt-utils';
+import { UserModule } from 'src/user/user.module';
 
 const { JWT_SECRET: secret, JWT_EXPIRES: expiresIn } = process.env;
 
 @Module({
   imports: [
     JwtModule.register({ secret, signOptions: { expiresIn } }),
-    DatabaseModule,
     PassportModule,
+    UserModule,
   ],
   controllers: [AuthController],
-  providers: [...authProviders, AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

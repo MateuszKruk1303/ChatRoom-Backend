@@ -10,11 +10,4 @@ const { message: loginMessage, code: loginCode }: HttpExceptionFields = {
   code: 401,
 };
 
-const { message: existsMessage, code: existsCode }: HttpExceptionFields = {
-  message: 'User with provided name already exists',
-  code: 409,
-};
-
 export const loginError = new HttpException(loginMessage, loginCode);
-
-export const userExistsError = new HttpException(existsMessage, existsCode);
