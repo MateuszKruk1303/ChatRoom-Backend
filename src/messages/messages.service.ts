@@ -5,6 +5,7 @@ import { MESSAGES_REPOSITORY } from './constants';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Message } from './entities';
 import { getMessagesQuery } from './queries';
+import { SocketUser } from './types';
 
 @Injectable()
 export class MessagesService {
@@ -29,7 +30,7 @@ export class MessagesService {
     return result;
   }
 
-  getSocketIdToUseridMapping(data: Map<string, Socket>) {
+  extractConnectedUsersData(data: Map<string, Socket>): SocketUser[] {
     const result = Array.from(data.values()).map((item) => {
       const socketId = item.id;
       const userId = item.handshake.url.split('&')[1].split('=')[1];

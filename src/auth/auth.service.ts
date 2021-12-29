@@ -1,11 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/shared';
+import { UserService } from 'src/user/user.service';
 import { AuthenticateDto } from './dto';
 import { loginError } from './auth.errors';
-import { UserService } from 'src/user/user.service';
+import { JWT_PREFIX_LENGTH } from './constants';
 
 const { JWT_SECRET } = process.env;
 @Injectable()
@@ -37,7 +37,7 @@ export class AuthService {
   }
 
   async whoAmI(token: string) {
-    const newToken = token.slice(7);
+    const newToken = token.slice(JWT_PREFIX_LENGTH);
     const {
       payload: { name, id },
     }: any = this.jwtService.decode(newToken, { complete: true });

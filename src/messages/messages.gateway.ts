@@ -6,10 +6,10 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { UnauthorizedException } from '@nestjs/common';
-import { MessagesService } from './messages.service';
-import { messages } from './constants';
 import { AuthService } from 'src/auth/auth.service';
 import { Server, Socket } from 'socket.io';
+import { MessagesService } from './messages.service';
+import { messages } from './constants';
 import { CreateMessageDto } from './dto/create-message.dto';
 
 @WebSocketGateway({ cors: true })
@@ -35,9 +35,7 @@ export class MessagesGateway
       const token = socket.handshake.query.token as string;
       const user = await this.authService.getUserByToken(token);
       if (!user) this.disconnectClient(socket);
-      const connectedUsers = this.messagesService.getSocketIdToUseridMapping(
-        this.server.sockets.sockets,
-      );
+      const connectedUsers = this.getConnectedUsers();
       this.server.emit(messages.userConnected, {
         socketId: socket.id,
         userId: user.id,
@@ -51,6 +49,12 @@ export class MessagesGateway
         .emit(messages.error, new UnauthorizedException());
       return this.disconnectClient(socket);
     }
+  }
+
+  private getConnectedUsers() {
+    return this.messagesService.extractConnectedUsersData(
+      this.server.sockets.sockets,
+    );
   }
 
   private disconnectClient(socket: Socket) {
